@@ -1,45 +1,35 @@
 #include "node.h"
 
 node::node(node* parent, state s)
-    :
-    s(s)
+	:
+	s(s)
 {
-    this->parent = parent;
-    if(parent == nullptr)
-        this->depth = 0;
-    else
-        this->depth = parent->depth + 1;
+	this->parent = parent;
+	if (parent == nullptr)
+		this->depth = 0;
+	else
+		this->depth = parent->depth + 1;
 
-    heuristic he(s);
-    h = he.getVal();
+	heuristic he(s);
+	h = he.getVal();
 }
 
-state node::getState()
+state node::getState() const
 {
-    return s;
-}
-
-int node::getHeuristic() const
-{
-    return h;
+	return s;
 }
 
 std::vector<node> node::expand()
 {
-    std::vector<node> childs;
-    for (const auto& st : s.getNextStates()) {
-        node n(this, st);
-        childs.push_back(n);
-    }
-    return childs;
+	std::vector<node> childs;
+	for (const auto& st : s.getNextStates()) {
+		node n(this, st);
+		childs.push_back(n);
+	}
+	return childs;
 }
 
 int node::getDepth() const
 {
-    return depth;
-}
-
-node* node::getParent() const
-{
-    return parent;
+	return depth;
 }
