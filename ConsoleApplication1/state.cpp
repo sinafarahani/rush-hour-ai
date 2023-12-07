@@ -59,8 +59,8 @@ std::vector<state> state::getNextStates()
 {
 	parking p2 = p;
 	for (int i = 0; i < p.cars.size(); i++) {
-		if (checkMoveL(p2.cars[i]) != 0) {
-			--p2.cars[i];
+		for (int j = std::abs(checkMoveL(p2.cars[i])); j > 0; j--) {
+			p2.cars[i] -= j;
 			state ss(p2);
 			ss.movedCar = i;
 			nextStates.push_back(ss);
@@ -68,8 +68,8 @@ std::vector<state> state::getNextStates()
 		}
 	}
 	for (int i = 0; i < p.cars.size(); i++) {
-		if (checkMoveR(p2.cars[i]) != 0) {
-			++p2.cars[i];
+		for (int j = std::abs(checkMoveR(p2.cars[i])); j > 0; j--) {
+			p2.cars[i] += j;
 			state ss(p2);
 			ss.movedCar = i;
 			nextStates.push_back(ss);
@@ -107,7 +107,7 @@ int state::checkMoveL(parking::Car c)
 		while (!boardPoints[c.row[0] - 1][c.col[0] - 1 + space]) {
 			space--;
 			if (c.col[0] - 1 + space < 0) {
-				return space;
+				return space + 1;
 			}
 		}
 	}
@@ -118,7 +118,7 @@ int state::checkMoveL(parking::Car c)
 		while (!boardPoints[c.row[0] - 1 + space][c.col[0] - 1]) {
 			space--;
 			if (c.row[0] - 1 + space < 0) {
-				return space;
+				return space + 1;
 			}
 		}
 	}
@@ -134,7 +134,7 @@ int state::checkMoveR(parking::Car c)
 		while (!boardPoints[c.row[1] - 1][c.col[1] - 1 + space]) {
 			space++;
 			if (c.col[1] - 1 + space >= p.getN()) {
-				return space;
+				return space - 1;
 			}
 		}
 	}
@@ -144,8 +144,8 @@ int state::checkMoveR(parking::Car c)
 		}
 		while (!boardPoints[c.row[1] - 1 + space][c.col[1] - 1]) {
 			space++;
-			if (c.row[1] - 1 + space >= p.getN()) {
-				return space;
+			if (c.row[1] - 1 + space >= p.getM()) {
+				return space - 1;
 			}
 		}
 	}

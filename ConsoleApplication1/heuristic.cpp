@@ -20,33 +20,33 @@ int heuristic::getVal() const
 void heuristic::calcMinMoves()
 {
 	val = 0;
-	for (const auto& car : getBlockingCars()) {
+	for (const auto& car : getBlockingCars(s.getRedCar())) {
 		if (hasSpace(s.getRedCar(), car)) {
 			val++;
 		}
 		else {
-			val += 2;/*
-			for (const auto& c2 : s.getParking().cars)
+			val += 2;
+			/*for (const auto& c2 : getBlockingCars(car))
 			{
-				if (checkBlocked(car, c2) && !hasSpace(car, c2))
+				if (!hasSpace(car, c2))
 					val++;
 			}*/
 		}
 	}
 }
 
-std::vector<parking::Car> heuristic::getBlockingCars()
+std::vector<parking::Car> heuristic::getBlockingCars(parking::Car c)
 {
 	std::vector<parking::Car> blocking;
 
 	for (const auto& car : s.getParking().cars) {
-		if (car.h == s.getRedCar().h) {
+		if (car.h == c.h) {
 			continue;
 		}
-		if (s.getRedCar().getFixedPos() < car.getVarPos().first || s.getRedCar().getFixedPos() > car.getVarPos().second) {
+		if (c.getFixedPos() < car.getVarPos().first || c.getFixedPos() > car.getVarPos().second) {
 			continue;
 		}
-		if (checkBlocked(s.getRedCar(), car)) {
+		if (checkBlocked(c, car)) {
 			blocking.push_back(car);
 		}
 	}

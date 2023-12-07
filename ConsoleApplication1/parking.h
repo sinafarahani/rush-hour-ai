@@ -10,9 +10,11 @@ public:
 	public:
 		bool operator==(Car& c) {
 			return (c.row[0] == this->row[0] && c.row[1] == this->row[1] && c.col[0] == this->col[0] && c.col[1] == this->col[1] && c.h == this->h);
-		}bool operator==(const Car& c) const {
+		}
+		bool operator==(const Car& c) const {
 			return (c.row[0] == this->row[0] && c.row[1] == this->row[1] && c.col[0] == this->col[0] && c.col[1] == this->col[1] && c.h == this->h);
 		}
+
 		Car& operator--() {
 			if (this->h == 'h') {
 				this->col[0]--;
@@ -23,7 +25,8 @@ public:
 				this->row[1]--;
 			}
 			return *this;
-		}Car& operator++() {
+		}
+		Car& operator++() {
 			if (this->h == 'h') {
 				this->col[0]++;
 				this->col[1]++;
@@ -34,7 +37,31 @@ public:
 			}
 			return *this;
 		}
-		int getFixedPos(){
+
+		Car& operator+=(int i) {
+			if (this->h == 'h') {
+				this->col[0] += i;
+				this->col[1] += i;
+			}
+			else if (this->h == 'v') {
+				this->row[0] += i;
+				this->row[1] += i;
+			}
+			return *this;
+		}
+		Car& operator-=(int i) {
+			if (this->h == 'h') {
+				this->col[0] -= i;
+				this->col[1] -= i;
+			}
+			else if (this->h == 'v') {
+				this->row[0] -= i;
+				this->row[1] -= i;
+			}
+			return *this;
+		}
+
+		int getFixedPos() {
 			if (this->h == 'h') {
 				return row[0];
 			}
@@ -44,12 +71,12 @@ public:
 		}
 		std::pair<int, int> getVarPos() {
 			if (this->h == 'h') {
-				return std::make_pair(col[0],col[1]);
+				return std::make_pair(col[0], col[1]);
 			}
 			else if (this->h == 'v') {
 				return std::make_pair(row[0], row[1]);
 			}
-		}int getFixedPos() const{
+		}int getFixedPos() const {
 			if (this->h == 'h') {
 				return row[0];
 			}
@@ -57,7 +84,7 @@ public:
 				return col[0];
 			}
 		}
-		std::pair<int, int> getVarPos() const{
+		std::pair<int, int> getVarPos() const {
 			if (this->h == 'h') {
 				return std::make_pair(col[0], col[1]);
 			}

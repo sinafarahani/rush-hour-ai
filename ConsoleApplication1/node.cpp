@@ -7,8 +7,6 @@ node::node(node* parent, state s)
     this->parent = parent;
     if(parent == nullptr)
         this->depth = 0;
-    else if(s.movedCar == parent->s.movedCar)
-        this->depth = parent->depth;
     else
         this->depth = parent->depth + 1;
 
