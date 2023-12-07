@@ -6,10 +6,6 @@ parking::parking(int M, int N, int V)
 	N(N),
 	V(V)
 {
-	boardPoints = new bool* [M];
-	for (int i = 0; i < M; ++i) {
-		boardPoints[i] = new bool[N];
-	}
 	bool redcar = true;
 	for (int i = 0; i < V; i++) {
 		int r, c, l;

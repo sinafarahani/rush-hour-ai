@@ -1,13 +1,13 @@
 #include "solver.h"
 
-solver::solver(const parking& p)
+solver::solver(const parking p)
 	:
 	p(p)
 {
 
 }
 
-void solver::solve()
+void solver::solve(int i)
 {
 	state s(p);
 	node root(nullptr, s);
@@ -17,7 +17,7 @@ void solver::solve()
 		std::sort(frontier.begin(), frontier.end(), [](node& n1, node& n2) {return n1 > n2; });
 		auto& cur = frontier.back();
 		if (cur.getState().solved()) {
-			std::cout << cur.getDepth() - 1 << std::endl;
+			std::cout << "Test #" << i << ": " << cur.getDepth() << std::endl;
 			return;
 		}
 		checked_nodes.push_back(cur);

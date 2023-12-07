@@ -7,11 +7,11 @@
 
 class solver {
 public:
-	solver(const parking& p);
-	void solve();
+	solver(const parking p);
+	void solve(int i);
 
 private:
-	const parking& p;
+	const parking p;
 	std::vector<node> frontier;
 	std::vector<node> checked_nodes;
 };

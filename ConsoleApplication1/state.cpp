@@ -86,7 +86,10 @@ parking state::getParking() const
 
 bool state::solved() const
 {
-	return red.col[1] == p.getN();
+	if (red.h == 'h')
+		return red.col[1] == p.getN();
+	else
+		return red.row[1] == p.getM();
 }
 
 parking::Car state::getRedCar()

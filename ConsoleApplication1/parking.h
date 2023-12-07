@@ -81,7 +81,4 @@ private:
 	int M;
 	int N;
 	int V;
-	bool** boardPoints;
-	std::vector<bool> brdpts;
-	std::vector<std::vector<bool>> checkedbrdpts;
 };

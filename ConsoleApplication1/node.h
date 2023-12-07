@@ -12,13 +12,6 @@ public:
 		return this->s == n.s;
 	}
 
-	bool operator!=(node& n) {
-		return this->s != n.s;
-	}
-	bool operator!=(const node& n) const {
-		return this->s != n.s;
-	}
-	
 	bool operator<(node& n) {
 		return this->h + this->depth < n.h + n.depth;
 	}

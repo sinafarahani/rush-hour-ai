@@ -19,18 +19,18 @@ int heuristic::getVal() const
 
 void heuristic::calcMinMoves()
 {
-	val = 1;
+	val = 0;
 	for (const auto& car : getBlockingCars()) {
 		if (hasSpace(s.getRedCar(), car)) {
 			val++;
 		}
 		else {
-			val++;
+			val += 2;/*
 			for (const auto& c2 : s.getParking().cars)
 			{
 				if (checkBlocked(car, c2) && !hasSpace(car, c2))
 					val++;
-			}
+			}*/
 		}
 	}
 }
