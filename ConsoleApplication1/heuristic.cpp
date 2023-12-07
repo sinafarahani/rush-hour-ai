@@ -17,22 +17,34 @@ int heuristic::getVal() const
 
 void heuristic::calcMinMoves()
 {
-	for (const auto& car : getBlockingCars(s.getRedCar())) {
-		if (hasSpace(s.getRedCar(), car)) {
+	for (const auto& car : getBlockingCarsR(s.getRedCar())) {
+		val++;
+		if (!hasSpace(s.getRedCar(), car)) {
 			val++;
-		}
-		else {
-			val += 2;
-			/*for (const auto& c2 : getBlockingCars(car))
+			bool next = true;
+			for (const auto& c2 : getBlockingCarsL(car))
 			{
-				if (!hasSpace(car, c2))
-					val++;
-			}*/
+				if (hasSpace(car, c2)) {
+					next = false;
+					break;
+				}
+			}
+			for (const auto& c2 : getBlockingCarsR(car))
+			{
+				if (hasSpace(car, c2)) {
+					next = false;
+					break;
+				}
+			}
+			if (next)
+				val++;
 		}
+
+		
 	}
 }
 
-std::vector<parking::Car> heuristic::getBlockingCars(parking::Car c)
+std::vector<parking::Car> heuristic::getBlockingCarsR(parking::Car c)
 {
 	std::vector<parking::Car> blocking;
 
@@ -51,9 +63,33 @@ std::vector<parking::Car> heuristic::getBlockingCars(parking::Car c)
 	return blocking;
 }
 
+std::vector<parking::Car> heuristic::getBlockingCarsL(parking::Car c)
+{
+	std::vector<parking::Car> blocking;
+
+	for (const auto& car : s.getParking().cars) {
+		if (car.h == c.h) {
+			continue;
+		}
+		if (c.getFixedPos() < car.getVarPos().first || c.getFixedPos() > car.getVarPos().second) {
+			continue;
+		}
+		if (checkBlockedL(c, car)) {
+			blocking.push_back(car);
+		}
+	}
+
+	return blocking;
+}
+
 bool heuristic::checkBlockedR(parking::Car c1, parking::Car c2) const
 {
 	return (c1.getVarPos().second < c2.getFixedPos()) && (c1.getFixedPos() >= c2.getVarPos().first && c1.getFixedPos() <= c2.getVarPos().second);
+}
+
+bool heuristic::checkBlockedL(parking::Car c1, parking::Car c2) const
+{
+	return (c1.getVarPos().second > c2.getFixedPos()) && (c1.getFixedPos() >= c2.getVarPos().first && c1.getFixedPos() <= c2.getVarPos().second);
 }
 
 bool heuristic::hasSpace(parking::Car c1, parking::Car c2)
