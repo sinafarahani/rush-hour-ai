@@ -19,6 +19,5 @@ private:
 	parking p;
 	parking::Car red;
 	bool** boardPoints;
-	std::vector<bool> brdpts;
 	std::vector<state> nextStates;
 };

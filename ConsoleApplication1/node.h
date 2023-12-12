@@ -42,7 +42,7 @@ public:
 		return !(this->h + this->depth > n.h + n.depth);
 	}
 
-	node(const state s, int d = 0);
+	node(node* parent, const state s);
 	state getState() const;
 	std::vector<node> expand();
 	int getDepth() const;

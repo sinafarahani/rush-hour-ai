@@ -1,10 +1,15 @@
 #include "node.h"
 
-node::node(state s, int d)
+node::node(node* parent, state s)
 	:
 	s(s)
 {
-	this->depth = d + 1;
+	if (parent == nullptr) {
+		this->depth = 0;
+	}
+	else {
+		this->depth = parent->depth + 1;
+	}
 	heuristic he(s);
 	h = he.getVal();
 }
@@ -18,7 +23,7 @@ std::vector<node> node::expand()
 {
 	std::vector<node> childs;
 	for (const auto& st : s.getNextStates()) {
-		node n(st, depth);
+		node n(this, st);
 		childs.push_back(n);
 	}
 	return childs;

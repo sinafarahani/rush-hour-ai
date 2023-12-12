@@ -20,12 +20,6 @@ state::state(parking p)
 			}
 		}
 	}
-	brdpts.clear();
-	for (int i = 0; i < p.getM(); i++) {
-		for (int j = 0; j < p.getN(); j++) {
-			brdpts.push_back(boardPoints[i][j]);
-		}
-	}
 	red = p.cars[0];
 }
 

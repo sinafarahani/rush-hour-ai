@@ -10,7 +10,7 @@ solver::solver(const parking p)
 void solver::solve(int i)
 {
 	state s(p);
-	node root(s);
+	node root(nullptr, s);
 	frontier.push_back(root);
 	while (!frontier.empty())
 	{

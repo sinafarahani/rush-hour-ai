@@ -9,7 +9,6 @@
 int main()
 {
 	int T;
-	//std::vector<solver> parkingSolvers;
 	std::vector<std::thread> solvers;
 	std::cin >> T;
 
