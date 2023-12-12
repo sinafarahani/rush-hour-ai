@@ -1,5 +1,7 @@
 #pragma once
 
+#include <algorithm>
+
 #include "heuristic.h"
 #include "state.h"
 
@@ -40,7 +42,7 @@ public:
 		return !(this->h + this->depth > n.h + n.depth);
 	}
 
-	node(node* parent, const state s);
+	node(const state s, int d = 0);
 	state getState() const;
 	std::vector<node> expand();
 	int getDepth() const;
@@ -48,5 +50,4 @@ private:
 	int depth = 0;
 	int h;
 	state s;
-	node* parent;
 };

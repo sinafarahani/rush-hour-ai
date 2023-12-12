@@ -28,5 +28,6 @@ int main()
 	auto next = std::chrono::high_resolution_clock::now();
 
 	auto time = std::chrono::duration<float>(next - now).count();
-	std::cout << "calculation took " << time << " seconds";
+	std::cout << "calculation took " << time << " seconds" << std::endl;
+	system("pause");
 }
