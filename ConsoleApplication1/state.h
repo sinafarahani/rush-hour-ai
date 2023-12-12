@@ -14,7 +14,6 @@ public:
 	int checkMoveL(parking::Car c);
 	int checkMoveR(parking::Car c);
 	int movedCar;
-	void print() const;
 private:
 	parking p;
 	parking::Car red;

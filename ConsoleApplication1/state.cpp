@@ -145,14 +145,3 @@ int state::checkMoveR(parking::Car c)
 	}
 	return space - 1;
 }
-
-void state::print() const
-{
-	for (int i = 0; i < p.getM(); i++) {
-		for (int j = 0; j < p.getN(); j++) {
-			std::cout << boardPoints[i][j] << " ";
-		}
-		std::cout << std::endl;
-	}
-	std::cout << std::endl;
-}

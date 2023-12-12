@@ -21,26 +21,10 @@ void heuristic::calcMinMoves()
 		val++;
 		if (!hasSpace(s.getRedCar(), car)) {
 			val++;
-			bool next = true;
-			for (const auto& c2 : getBlockingCarsL(car))
-			{
-				if (hasSpace(car, c2)) {
-					next = false;
-					break;
-				}
-			}
-			for (const auto& c2 : getBlockingCarsR(car))
-			{
-				if (hasSpace(car, c2)) {
-					next = false;
-					break;
-				}
-			}
-			if (next)
+			if (checkForSpace(car)) {
 				val++;
+			}
 		}
-
-		
 	}
 }
 
@@ -80,6 +64,34 @@ std::vector<parking::Car> heuristic::getBlockingCarsL(parking::Car c)
 	}
 
 	return blocking;
+}
+
+std::vector<parking::Car> heuristic::getBlockingCars(parking::Car c)
+{
+	std::vector<parking::Car> car;
+	auto cr = getBlockingCarsR(c);
+	auto cl = getBlockingCarsL(c);
+	car.reserve(cr.size() + cl.size());
+	car.insert(car.end(), cr.begin(), cr.end());
+	car.insert(car.end(), cl.begin(), cl.end());
+	return car;
+}
+
+bool heuristic::checkForSpace(parking::Car c1)
+{
+	for (const auto& c2 : getBlockingCarsL(c1))
+	{
+		if (hasSpace(c1, c2)) {
+			return false;
+		}
+	}
+	for (const auto& c2 : getBlockingCarsR(c1))
+	{
+		if (hasSpace(c1, c2)) {
+			return false;;
+		}
+	}
+	return true;
 }
 
 bool heuristic::checkBlockedR(parking::Car c1, parking::Car c2) const

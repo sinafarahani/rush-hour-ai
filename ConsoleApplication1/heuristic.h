@@ -10,6 +10,8 @@ private:
 	void calcMinMoves();
 	std::vector<parking::Car> getBlockingCarsR(parking::Car c);
 	std::vector<parking::Car> getBlockingCarsL(parking::Car c);
+	std::vector<parking::Car> getBlockingCars(parking::Car c);
+	bool checkForSpace(parking::Car c1);
 	bool checkBlockedR(parking::Car c1, parking::Car c2) const;
 	bool checkBlockedL(parking::Car c1, parking::Car c2) const;
 	bool hasSpace(parking::Car c1, parking::Car c2);
