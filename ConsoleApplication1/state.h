@@ -1,22 +1,30 @@
 #pragma once
 
+#include <cstddef>
+#include <string>
+
 #include "parking.h"
 
+// One configuration of the board: the position of every car along its axis.
+// Positions are packed one byte per car into a std::string, so states are cheap to
+// copy (small-string optimisation, no heap allocation for typical boards) and can be
+// hashed with std::hash.
 class state {
 public:
-	state(parking p);
-	bool operator==(state& s);
+	explicit state(const parking& p);
+
 	bool operator==(const state& s) const;
-	std::vector<state> getNextStates();
-	parking getParking() const;
+
+	int getPosition(std::size_t car) const;
+	state withPosition(std::size_t car, int position) const;
 	bool solved() const;
-	parking::Car getRedCar();
-	int checkMoveL(parking::Car c);
-	int checkMoveR(parking::Car c);
-	int movedCar;
+	const parking& getParking() const;
+
+	struct hash {
+		std::size_t operator()(const state& s) const;
+	};
+
 private:
-	parking p;
-	parking::Car red;
-	bool** boardPoints;
-	std::vector<state> nextStates;
+	const parking* p;
+	std::string positions;
 };

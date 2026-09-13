@@ -1,147 +1,45 @@
 #include "state.h"
 
-state::state(parking p)
-	:
-	p(p)
-{
-	boardPoints = new bool* [p.getM()];
-	for (int i = 0; i < p.getM(); ++i) {
-		boardPoints[i] = new bool[p.getN()];
-	}
-	for (int i = 0; i < p.getM(); i++) {
-		for (int j = 0; j < p.getN(); j++) {
-			boardPoints[i][j] = false;
-		}
-	}
-	for (const auto& car : p.cars) {
-		for (int i = car.row[0]; i <= car.row[1]; i++) {
-			for (int j = car.col[0]; j <= car.col[1]; j++) {
-				boardPoints[i - 1][j - 1] = true;
-			}
-		}
-	}
-	red = p.cars[0];
-}
+#include <functional>
 
-bool state::operator==(state& s)
+state::state(const parking& p)
+	:
+	p(&p)
 {
-	bool r = true;
-	if (this->p.cars.size() == s.p.cars.size()) {
-		for (int i = 0; i < this->p.cars.size(); i++) {
-			r &= (this->p.cars[i] == s.p.cars[i]);
-		}
-		return r;
+	for (int position : p.getStartPositions()) {
+		positions.push_back(static_cast<char>(position));
 	}
-	else
-		return false;
 }
 
 bool state::operator==(const state& s) const
 {
-	bool r = true;
-	if (this->p.cars.size() == s.p.cars.size()) {
-		for (int i = 0; i < this->p.cars.size(); i++) {
-			r &= (this->p.cars[i] == s.p.cars[i]);
-		}
-		return r;
-	}
-	else
-		return false;
+	return positions == s.positions;
 }
 
-std::vector<state> state::getNextStates()
+int state::getPosition(std::size_t car) const
 {
-	parking p2 = p;
-	for (int i = 0; i < p.cars.size(); i++) {
-		for (int j = std::abs(checkMoveL(p2.cars[i])); j > 0; j--) {
-			p2.cars[i] -= j;
-			state ss(p2);
-			ss.movedCar = i;
-			nextStates.push_back(ss);
-			p2 = p;
-		}
-	}
-	for (int i = 0; i < p.cars.size(); i++) {
-		for (int j = std::abs(checkMoveR(p2.cars[i])); j > 0; j--) {
-			p2.cars[i] += j;
-			state ss(p2);
-			ss.movedCar = i;
-			nextStates.push_back(ss);
-			p2 = p;
-		}
-	}
-	return nextStates;
+	return static_cast<unsigned char>(positions[car]);
 }
 
-parking state::getParking() const
+state state::withPosition(std::size_t car, int position) const
 {
-	return p;
+	state next = *this;
+	next.positions[car] = static_cast<char>(position);
+	return next;
 }
 
 bool state::solved() const
 {
-	if (red.h == 'h')
-		return red.col[1] == p.getN();
-	else
-		return red.row[1] == p.getM();
+	const parking::Car& red = p->getRedCar();
+	return getPosition(0) + red.length == p->axisLength(red);
 }
 
-parking::Car state::getRedCar()
+const parking& state::getParking() const
 {
-	return red;
+	return *p;
 }
 
-int state::checkMoveL(parking::Car c)
+std::size_t state::hash::operator()(const state& s) const
 {
-	int space = -1;
-	if (c.h == 'h') {
-		if (c.col[0] <= 1) {
-			return 0;
-		}
-		while (!boardPoints[c.row[0] - 1][c.col[0] - 1 + space]) {
-			space--;
-			if (c.col[0] - 1 + space < 0) {
-				return space + 1;
-			}
-		}
-	}
-	else if (c.h == 'v') {
-		if (c.row[0] <= 1) {
-			return 0;
-		}
-		while (!boardPoints[c.row[0] - 1 + space][c.col[0] - 1]) {
-			space--;
-			if (c.row[0] - 1 + space < 0) {
-				return space + 1;
-			}
-		}
-	}
-	return space + 1;
-}
-int state::checkMoveR(parking::Car c)
-{
-	int space = 1;
-	if (c.h == 'h') {
-		if (c.col[1] >= p.getN()) {
-			return 0;
-		}
-		while (!boardPoints[c.row[1] - 1][c.col[1] - 1 + space]) {
-			space++;
-			if (c.col[1] - 1 + space >= p.getN()) {
-				return space - 1;
-			}
-		}
-	}
-	else if (c.h == 'v') {
-		if (c.row[1] >= p.getM()) {
-			return 0;
-		}
-		while (!boardPoints[c.row[1] - 1 + space][c.col[1] - 1]) {
-			space++;
-			if (c.row[1] - 1 + space >= p.getM()) {
-				return space - 1;
-			}
-		}
-	}
-	return space - 1;
+	return std::hash<std::string>{}(s.positions);
 }

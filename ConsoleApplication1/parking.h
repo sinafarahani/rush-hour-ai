@@ -1,111 +1,38 @@
 #pragma once
 
-#include <iostream>
+#include <istream>
 #include <vector>
 
+// The static part of a puzzle: the board size and the fixed properties of every car.
+// Everything that changes during the search (car positions) lives in `state`.
+// Coordinates are 0-based internally; the input format is 1-based.
 class parking {
 public:
-	class Car
-	{
+	class Car {
 	public:
-		bool operator==(Car& c) {
-			return (c.row[0] == this->row[0] && c.row[1] == this->row[1] && c.col[0] == this->col[0] && c.col[1] == this->col[1] && c.h == this->h);
-		}
-		bool operator==(const Car& c) const {
-			return (c.row[0] == this->row[0] && c.row[1] == this->row[1] && c.col[0] == this->col[0] && c.col[1] == this->col[1] && c.h == this->h);
-		}
-
-		Car& operator--() {
-			if (this->h == 'h') {
-				this->col[0]--;
-				this->col[1]--;
-			}
-			else if (this->h == 'v') {
-				this->row[0]--;
-				this->row[1]--;
-			}
-			return *this;
-		}
-		Car& operator++() {
-			if (this->h == 'h') {
-				this->col[0]++;
-				this->col[1]++;
-			}
-			else if (this->h == 'v') {
-				this->row[0]++;
-				this->row[1]++;
-			}
-			return *this;
-		}
-
-		Car& operator+=(int i) {
-			if (this->h == 'h') {
-				this->col[0] += i;
-				this->col[1] += i;
-			}
-			else if (this->h == 'v') {
-				this->row[0] += i;
-				this->row[1] += i;
-			}
-			return *this;
-		}
-		Car& operator-=(int i) {
-			if (this->h == 'h') {
-				this->col[0] -= i;
-				this->col[1] -= i;
-			}
-			else if (this->h == 'v') {
-				this->row[0] -= i;
-				this->row[1] -= i;
-			}
-			return *this;
-		}
-
-		int getFixedPos() {
-			if (this->h == 'h') {
-				return row[0];
-			}
-			else if (this->h == 'v') {
-				return col[0];
-			}
-		}
-		std::pair<int, int> getVarPos() {
-			if (this->h == 'h') {
-				return std::make_pair(col[0], col[1]);
-			}
-			else if (this->h == 'v') {
-				return std::make_pair(row[0], row[1]);
-			}
-		}int getFixedPos() const {
-			if (this->h == 'h') {
-				return row[0];
-			}
-			else if (this->h == 'v') {
-				return col[0];
-			}
-		}
-		std::pair<int, int> getVarPos() const {
-			if (this->h == 'h') {
-				return std::make_pair(col[0], col[1]);
-			}
-			else if (this->h == 'v') {
-				return std::make_pair(row[0], row[1]);
-			}
-		}
-		int row[2];
-		int col[2];
-		char h;
+		bool horizontal;
+		int line;   // row of a horizontal car, column of a vertical car; never changes
+		int length;
 	};
 
-	parking(int M, int N, int V);
+	// `state` stores one byte per car position, which limits the board size.
+	static constexpr int maxBoardSize = 255;
+
+	// Reads one puzzle: "M N V" followed by V lines of "row col h|v length".
+	// The first car is the red car. Throws std::runtime_error on invalid input.
+	[[nodiscard]] static parking read(std::istream& in);
 
 	int getM() const;
 	int getN() const;
-	int getV() const;
+	const std::vector<Car>& getCars() const;
+	const Car& getRedCar() const;
+	const std::vector<int>& getStartPositions() const;
+	// Number of cells along the axis the car slides on.
+	int axisLength(const Car& c) const;
 
-	std::vector<Car> cars;
 private:
-	int M;
-	int N;
-	int V;
+	int M = 0; // rows
+	int N = 0; // columns
+	std::vector<Car> cars;
+	std::vector<int> startPositions; // first cell of each car along its axis
 };
